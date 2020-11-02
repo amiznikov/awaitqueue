@@ -32,6 +32,8 @@ export declare class AwaitQueue {
      * error.
      */
     close(): void;
+    removeItem(name: string): void;
+    private removeTask;
     /**
      * Accepts a task as argument (and an optional task name) and enqueues it after
      * pending tasks. Once processed, the push() method resolves (or rejects) with

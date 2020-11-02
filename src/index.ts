@@ -91,6 +91,27 @@ export class AwaitQueue
 		this.pendingTasks.length = 0;
 	}
 
+	removeItem(name: string):void {
+		if (this.closed)
+			throw new this.ClosedErrorClass('AwaitQueue closed');
+
+		const index = this.pendingTasks.findIndex((val: PendingTask) =>  {
+			if(val.name == name) return true
+			return false;
+		})
+
+		~index && this.removeTask(index)
+	}
+
+	private removeTask(index: number):void {
+		const pendingTask = this.pendingTasks[index]
+		if(pendingTask.executedAt || pendingTask.stopped) {
+			return
+		}
+
+		this.pendingTasks.splice(index, 1);
+	}
+
 	/**
 	 * Accepts a task as argument (and an optional task name) and enqueues it after
 	 * pending tasks. Once processed, the push() method resolves (or rejects) with
