@@ -91,7 +91,7 @@ export class AwaitQueue
 		this.pendingTasks.length = 0;
 	}
 
-	removeItem(name: string):void {
+	removeItem(name: string):boolean {
 		if (this.closed)
 			throw new this.ClosedErrorClass('AwaitQueue closed');
 
@@ -100,16 +100,20 @@ export class AwaitQueue
 			return false;
 		})
 
-		~index && this.removeTask(index)
+		if(~index) {
+			return this.removeTask(index)	
+		} 
+		return false;
 	}
 
-	private removeTask(index: number):void {
+	private removeTask(index: number):boolean {
 		const pendingTask = this.pendingTasks[index]
 		if(pendingTask.executedAt || pendingTask.stopped) {
-			return
+			return false
 		}
 
 		this.pendingTasks.splice(index, 1);
+		return true
 	}
 
 	/**
